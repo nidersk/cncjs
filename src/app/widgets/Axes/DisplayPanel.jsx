@@ -4,6 +4,7 @@ import includes from 'lodash/includes';
 import noop from 'lodash/noop';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import classNames from 'classnames';
 import Dropdown, { MenuItem } from 'app/components/Dropdown';
 import Image from 'app/components/Image';
 import { Tooltip } from 'app/components/Tooltip';
@@ -1023,10 +1024,11 @@ class DisplayPanel extends PureComponent {
         const canModifyWorkPosition = canClick && !this.state.positionInput[axis];
         const showPositionInput = canClick && this.state.positionInput[axis];
         const highlightAxis = canClick && (jog.keypad || jog.axis === axis);
+        const highlightAxisBg = canClick && (!jog.keypad && jog.axis === axis);
 
         return (
             <tr>
-                <td className={styles.coordinate}>
+                <td className={classNames(styles.coordinate, { [styles.highlight]: highlightAxisBg })}>
                     <AxisLabel highlight={highlightAxis}>
                         {axisLabel}
                     </AxisLabel>
