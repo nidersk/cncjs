@@ -261,7 +261,7 @@ class TerminalWrapper extends PureComponent {
         const el = ReactDOM.findDOMNode(this.terminalContainer);
         this.term.open(el);
         this.term.fit();
-        this.term.focus(false);
+        //this.term.focus(false);
 
         this.term.setOption('fontFamily', 'Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif');
 
