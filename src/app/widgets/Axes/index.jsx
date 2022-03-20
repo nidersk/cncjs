@@ -162,8 +162,7 @@ class AxesWidget extends PureComponent {
 
             return defaultWCS;
         },
-        setWorkOffsets: (axis, value) => {
-            const wcs = this.actions.getWorkCoordinateSystem();
+        getWorkCoordinateSystemIndex: (wcs) => {
             const p = {
                 'G54': 1,
                 'G55': 2,
@@ -171,11 +170,30 @@ class AxesWidget extends PureComponent {
                 'G57': 4,
                 'G58': 5,
                 'G59': 6
-            }[wcs] || 0;
+            };
+            return p[wcs] || 0;
+        },
+        setWorkOffsets: (axis, value) => {
+            const wcs = this.actions.getWorkCoordinateSystem();
+            const p = this.actions.getWorkCoordinateSystemIndex(wcs);
             axis = (axis || '').toUpperCase();
             value = Number(value) || 0;
 
             const gcode = `G10 L20 P${p} ${axis}${value}`;
+            controller.command('gcode', gcode);
+        },
+        setWorkOriginXY: () => {
+            const wcs = this.actions.getWorkCoordinateSystem();
+            const p = this.actions.getWorkCoordinateSystemIndex(wcs);
+
+            const gcode = `G10 L20 P${p} X0Y0`;
+            controller.command('gcode', gcode);
+        },
+        setWorkOriginZ: () => {
+            const wcs = this.actions.getWorkCoordinateSystem();
+            const p = this.actions.getWorkCoordinateSystemIndex(wcs);
+
+            const gcode = `G10 L20 P${p} Z0`;
             controller.command('gcode', gcode);
         },
         jog: (params = {}) => {
@@ -321,6 +339,12 @@ class AxesWidget extends PureComponent {
     };
 
     shuttleControlEvents = {
+        SET_WORK_ORIGIN_XY: () => {
+            this.actions.setWorkOriginXY();
+        },
+        SET_WORK_ORIGIN_Z: () => {
+            this.actions.setWorkOriginZ();
+        },
         SELECT_AXIS: (event, { axis }) => {
             const { canClick, jog } = this.state;
 

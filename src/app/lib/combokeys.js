@@ -526,6 +526,16 @@ const commandKeys = [
             axis: 'c'
         },
         preventDefault: true
+    },
+    { // Set XY origin
+        keys: ['ctrl', 'alt', 'command', 'o'].join('+'),
+        cmd: 'SET_WORK_ORIGIN_XY',
+        preventDefault: true
+    },
+    { // Set Z origin
+        keys: ['shift', 'ctrl', 'alt', 'command', 'o'].join('+'),
+        cmd: 'SET_WORK_ORIGIN_Z',
+        preventDefault: true
     }
 ];
 
