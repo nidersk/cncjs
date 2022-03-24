@@ -52,6 +52,16 @@ import {
 } from './constants';
 import styles from './index.styl';
 
+const say = (text) => {
+    if (!text) {
+        return;
+    }
+    if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+    }
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+};
+
 class AxesWidget extends PureComponent {
     static propTypes = {
         widgetId: PropTypes.string.isRequired,
@@ -188,6 +198,9 @@ class AxesWidget extends PureComponent {
 
             const gcode = `G10 L20 P${p} X0Y0`;
             controller.command('gcode', gcode);
+            if (this.config.get('sound.speakoutValues')) {
+                say('XY origin set');
+            }
         },
         setWorkOriginZ: () => {
             const wcs = this.actions.getWorkCoordinateSystem();
@@ -195,6 +208,9 @@ class AxesWidget extends PureComponent {
 
             const gcode = `G10 L20 P${p} Z0`;
             controller.command('gcode', gcode);
+            if (this.config.get('sound.speakoutValues')) {
+                say('Z origin set');
+            }
         },
         jog: (params = {}) => {
             const s = map(params, (value, letter) => ('' + letter.toUpperCase() + value)).join(' ');
@@ -229,6 +245,9 @@ class AxesWidget extends PureComponent {
                     axis: axis
                 }
             }));
+            if (this.config.get('sound.speakoutValues') && axis !== '') {
+                say(`${axis} axis`);
+            }
         },
         selectStep: (value = '') => {
             const step = Number(value);
@@ -275,6 +294,10 @@ class AxesWidget extends PureComponent {
                     }
                 };
             });
+            if (this.config.get('sound.speakoutValues')) {
+                const step = this.actions.getJogDistance();
+                say(step);
+            }
         },
         stepBackward: () => {
             this.setState(state => {
@@ -305,6 +328,10 @@ class AxesWidget extends PureComponent {
                     }
                 };
             });
+            if (this.config.get('sound.speakoutValues')) {
+                const step = this.actions.getJogDistance();
+                say(step);
+            }
         },
         stepNext: () => {
             this.setState(state => {
@@ -335,6 +362,10 @@ class AxesWidget extends PureComponent {
                     }
                 };
             });
+            if (this.config.get('sound.speakoutValues')) {
+                const step = this.actions.getJogDistance();
+                say(step);
+            }
         }
     };
 
@@ -646,7 +677,8 @@ class AxesWidget extends PureComponent {
             minimized,
             axes,
             jog,
-            mdi
+            mdi,
+            sound
         } = this.state;
 
         this.config.set('minimized', minimized);
@@ -659,6 +691,7 @@ class AxesWidget extends PureComponent {
             this.config.set('jog.metric.step', Number(jog.metric.step) || 0);
         }
         this.config.set('mdi.disabled', mdi.disabled);
+        this.config.set('sound.speakoutValues', sound.speakoutValues);
     }
 
     getInitialState() {
@@ -712,6 +745,9 @@ class AxesWidget extends PureComponent {
             mdi: {
                 disabled: this.config.get('mdi.disabled'),
                 commands: []
+            },
+            sound: {
+                speakoutValues: this.config.get('sound.speakoutValues', false)
             }
         };
     }
@@ -941,7 +977,7 @@ class AxesWidget extends PureComponent {
                                 const axes = config.get('axes', DEFAULT_AXES);
                                 const imperialJogDistances = ensureArray(config.get('jog.imperial.distances', []));
                                 const metricJogDistances = ensureArray(config.get('jog.metric.distances', []));
-
+                                const speakoutValues = config.get('sound.speakoutValues', false);
                                 this.setState(state => ({
                                     axes: axes,
                                     jog: {
@@ -954,6 +990,9 @@ class AxesWidget extends PureComponent {
                                             ...state.jog.metric,
                                             distances: metricJogDistances
                                         }
+                                    },
+                                    sound: {
+                                        speakoutValues: speakoutValues
                                     }
                                 }));
 

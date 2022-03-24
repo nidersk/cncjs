@@ -45,6 +45,9 @@ const defaultState = {
                     distances: []
                 }
             },
+            sound: {
+                speakoutValues: false
+            },
             mdi: {
                 disabled: false
             },
@@ -185,6 +188,7 @@ const defaultState = {
 
             // 3D View
             disabled: false,
+            controlMode: 'orbit', // 'orbit' or 'trackball'
             projection: 'orthographic', // 'perspective' or 'orthographic'
             cameraMode: 'pan', // 'pan' or 'rotate'
             gcode: {

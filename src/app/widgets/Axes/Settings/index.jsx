@@ -57,6 +57,9 @@ class Settings extends PureComponent {
                 metric: {
                     distances: ensureArray(this.config.get('jog.metric.distances', []))
                 }
+            },
+            sound: {
+                speakoutValues: this.config.get('sound.speakoutValues', false)
             }
         },
 
@@ -84,12 +87,14 @@ class Settings extends PureComponent {
         const {
             axes = DEFAULT_AXES,
             imperialJogDistances,
-            metricJogDistances
+            metricJogDistances,
+            speakoutValues,
         } = this.node.general.value;
 
         this.config.replace('axes', ensureArray(axes));
         this.config.replace('jog.imperial.distances', ensureArray(imperialJogDistances));
         this.config.replace('jog.metric.distances', ensureArray(metricJogDistances));
+        this.config.replace('sound.speakoutValues', speakoutValues);
 
         // ShuttleXpress
         const { feedrateMin, feedrateMax, hertz, overshoot } = this.node.shuttleXpress.state;
@@ -136,6 +141,7 @@ class Settings extends PureComponent {
                                 axes={general.axes}
                                 imperialJogDistances={general.jog.imperial.distances}
                                 metricJogDistances={general.jog.metric.distances}
+                                speakoutValues={general.sound.speakoutValues}
                             />
                         </TabPane>
                         <TabPane active={this.state.activeKey === 'mdi'}>

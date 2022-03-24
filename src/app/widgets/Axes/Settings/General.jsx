@@ -21,7 +21,8 @@ class General extends PureComponent {
     static propTypes = {
         axes: PropTypes.array.isRequired,
         imperialJogDistances: PropTypes.array.isRequired,
-        metricJogDistances: PropTypes.array.isRequired
+        metricJogDistances: PropTypes.array.isRequired,
+        speakoutValues: PropTypes.bool.isRequired,
     };
 
     field = {
@@ -30,7 +31,8 @@ class General extends PureComponent {
         axisZ: null,
         axisA: null,
         axisB: null,
-        axisC: null
+        axisC: null,
+        speak: null,
     };
 
     state = {
@@ -66,10 +68,13 @@ class General extends PureComponent {
             }
         }
 
+        const speakoutValues = this.field.speak.checked;
+
         return {
             axes,
             imperialJogDistances,
-            metricJogDistances
+            metricJogDistances,
+            speakoutValues
         };
     }
 
@@ -140,7 +145,7 @@ class General extends PureComponent {
     };
 
     render() {
-        const { axes } = this.props;
+        const { axes, speakoutValues } = this.props;
         const { imperialJogDistances, metricJogDistances } = this.state;
 
         return (
@@ -299,6 +304,22 @@ class General extends PureComponent {
                                     {i18n._('Add')}
                                 </Button>
                             )}
+                        </Col>
+                    </Row>
+                </Margin>
+                <Margin bottom={15}>
+                    <label><strong>{i18n._('Sound')}</strong></label>
+                    <Row>
+                        <Col xs={12}>
+                            <FormGroup>
+                                <Checkbox
+                                    ref={this.withFieldRef('speak')}
+                                    defaultChecked={speakoutValues}
+                                >
+                                    <Space width="8" />
+                                    {i18n._('Speak out values (selected axis, xy/z origin set, distance changed)')}
+                                </Checkbox>
+                            </FormGroup>
                         </Col>
                     </Row>
                 </Margin>
