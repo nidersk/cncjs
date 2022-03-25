@@ -51,16 +51,7 @@ import {
     DEFAULT_AXES
 } from './constants';
 import styles from './index.styl';
-
-const say = (text) => {
-    if (!text) {
-        return;
-    }
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-    }
-    window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));
-};
+import Speech from './Speech';
 
 class AxesWidget extends PureComponent {
     static propTypes = {
@@ -82,6 +73,8 @@ class AxesWidget extends PureComponent {
     config = new WidgetConfig(this.props.widgetId);
 
     state = this.getInitialState();
+
+    speech = new Speech();
 
     actions = {
         toggleFullscreen: () => {
@@ -199,7 +192,7 @@ class AxesWidget extends PureComponent {
             const gcode = `G10 L20 P${p} X0Y0`;
             controller.command('gcode', gcode);
             if (this.config.get('sound.speakoutValues')) {
-                say('XY origin set');
+                this.speech.say('xy_origin_set');
             }
         },
         setWorkOriginZ: () => {
@@ -209,7 +202,7 @@ class AxesWidget extends PureComponent {
             const gcode = `G10 L20 P${p} Z0`;
             controller.command('gcode', gcode);
             if (this.config.get('sound.speakoutValues')) {
-                say('Z origin set');
+                this.speech.say('z_origin_set');
             }
         },
         jog: (params = {}) => {
@@ -246,7 +239,7 @@ class AxesWidget extends PureComponent {
                 }
             }));
             if (this.config.get('sound.speakoutValues') && axis !== '') {
-                say(`${axis} axis`);
+                this.speech.say(`${axis}_axis`);
             }
         },
         selectStep: (value = '') => {
@@ -296,7 +289,7 @@ class AxesWidget extends PureComponent {
             });
             if (this.config.get('sound.speakoutValues')) {
                 const step = this.actions.getJogDistance();
-                say(step);
+                this.speech.say(step);
             }
         },
         stepBackward: () => {
@@ -330,7 +323,7 @@ class AxesWidget extends PureComponent {
             });
             if (this.config.get('sound.speakoutValues')) {
                 const step = this.actions.getJogDistance();
-                say(step);
+                this.speech.say(step);
             }
         },
         stepNext: () => {
@@ -364,7 +357,7 @@ class AxesWidget extends PureComponent {
             });
             if (this.config.get('sound.speakoutValues')) {
                 const step = this.actions.getJogDistance();
-                say(step);
+                this.speech.say(step);
             }
         }
     };
@@ -660,10 +653,20 @@ class AxesWidget extends PureComponent {
         }
     };
 
+    addSpeechPhrases = () => {
+        this.speech.addPhrase('x_axis', 'X axis');
+        this.speech.addPhrase('y_axis', 'Y axis');
+        this.speech.addPhrase('z_axis', 'Z axis');
+
+        this.speech.addPhrase('xy_origin_set', 'XY origin set');
+        this.speech.addPhrase('z_origin_set', 'Z origin set');
+    };
+
     componentDidMount() {
         this.fetchMDICommands();
         this.addControllerEvents();
         this.addShuttleControlEvents();
+        this.addSpeechPhrases();
     }
 
     componentWillUnmount() {
