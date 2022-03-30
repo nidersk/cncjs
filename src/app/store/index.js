@@ -12,15 +12,15 @@ import ImmutableStore from '../lib/immutable-store';
 import log from '../lib/log';
 import defaultState from './defaultState';
 
+
 const store = new ImmutableStore(defaultState);
 
 let userData = null;
 
 // Check whether the code is running in Electron renderer process
 if (isElectron()) {
-    const electron = window.require('electron');
     const path = window.require('path'); // Require the path module within Electron
-    const app = electron.remote.app;
+    const app = window.require('@electron/remote').app;
     userData = {
         path: path.join(app.getPath('userData'), 'cnc.json')
     };

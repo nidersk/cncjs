@@ -1,5 +1,6 @@
 import '@babel/polyfill';
 import { app, Menu } from 'electron';
+import * as remoteMain from '@electron/remote/main';
 import Store from 'electron-store';
 import chalk from 'chalk';
 import mkdirp from 'mkdirp';
@@ -38,6 +39,8 @@ const main = () => {
         app.quit();
         return;
     }
+
+    remoteMain.initialize();
 
     app.on('second-instance', (event, commandLine, workingDirectory) => {
         // Someone tried to run a second instance, we should focus our window.

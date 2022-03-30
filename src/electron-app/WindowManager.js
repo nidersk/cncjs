@@ -1,5 +1,6 @@
 /* eslint import/no-unresolved: 0 */
 import { app, BrowserWindow, shell } from 'electron';
+import * as electronRemote from '@electron/remote/main';
 //import AutoUpdater from './AutoUpdater';
 
 class WindowManager {
@@ -49,9 +50,15 @@ class WindowManager {
     openWindow(url, options) {
         const window = new BrowserWindow({
             ...options,
-            show: false
+            show: false,
+            webPreferences: {
+                nodeIntegration: true,
+                enableRemoteModule: true,
+                contextIsolation: false
+            }
         });
         const webContents = window.webContents;
+        electronRemote.enable(webContents);
 
         window.on('closed', (event) => {
             const index = this.windows.indexOf(event.sender);
@@ -70,12 +77,9 @@ class WindowManager {
             window.show();
         });
 
-        // Call `ses.setProxy` to ignore proxy settings
-        // http://electron.atom.io/docs/latest/api/session/#sessetproxyconfig-callback
-        const ses = webContents.session;
-        ses.setProxy({ proxyRules: 'direct://' }, () => {
-            window.loadURL(url);
-        });
+        webContents.session.setProxy({ mode: 'direct' });
+
+        window.loadURL(url);
 
         this.windows.push(window);
 
