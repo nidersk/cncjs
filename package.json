@@ -78,6 +78,9 @@
       "output": "output",
       "app": "dist/cncjs"
     },
+    "extraResources": [
+      "./node_modules/@electron/remote/**"
+    ],
     "publish": [],
     "mac": {
       "category": "public.app-category.productivity",
@@ -255,7 +258,7 @@
     "registry-url": "~5.1.0",
     "rimraf": "~2.6.3",
     "semver": "~6.0.0",
-    "serialport": "~9.0.7",
+    "serialport": "^10.4.0",
     "serve-favicon": "~2.5.0",
     "serve-static": "~1.13.2",
     "session-file-store": "~1.2.0",
@@ -269,7 +272,7 @@
     "styled-components": "~3.4.9",
     "superagent": "~3.8.3",
     "superagent-use": "~0.1.0",
-    "three": "~0.103.0",
+    "three": "~0.123.0",
     "universal-logger": "~1.0.1",
     "universal-logger-browser": "~1.0.2",
     "uuid": "~3.3.2",
@@ -300,7 +303,7 @@
     "css-split-webpack-plugin": "~0.2.6",
     "del-cli": "~3.0.1",
     "dotenv": "~7.0.0",
-    "electron": "^18.0.0",
+    "electron": "^18.0.1",
     "electron-builder": "23.0.2",
     "electron-rebuild": "^3.2.7",
     "eslint": "~5.16.0",

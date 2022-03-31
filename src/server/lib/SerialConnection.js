@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
-import SerialPort from 'serialport';
-
-const Readline = SerialPort.parsers.Readline;
+import { SerialPort } from 'serialport';
+import { ReadlineParser } from '@serialport/parser-readline'
 
 // Validation
 const DATABITS = Object.freeze([5, 6, 7, 8]);
@@ -132,15 +131,15 @@ class SerialConnection extends EventEmitter {
 
         const { path, ...rest } = this.settings;
 
-        this.port = new SerialPort(path, {
-            ...rest,
+        this.port = new SerialPort({
+            ...this.settings,
             autoOpen: false
         });
         this.port.on('open', this.eventListener.open);
         this.port.on('close', this.eventListener.close);
         this.port.on('error', this.eventListener.error);
 
-        this.parser = this.port.pipe(new Readline({ delimiter: '\n' }));
+        this.parser = this.port.pipe(new ReadlineParser({ delimiter: '\n' }));
         this.parser.on('data', this.eventListener.data);
 
         this.port.open(callback);
